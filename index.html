@@ -3,245 +3,250 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Multiplication Matching — Picture Reveal (4×6)</title>
+<title>Multiplication Matching — Picture Reveal</title>
 <style>
-  :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#0f172a}
-  body{margin:18px;background:#f3f4f6}
-  h1{font-size:18px;margin:0 0 10px}
-  .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-  .tables{display:flex;gap:6px;flex-wrap:wrap}
-  .table-btn{border:1px solid #cbd5e1;background:white;padding:6px 8px;cursor:pointer}
-  .table-btn.on{background:#2563eb;color:white;border-color:#1d4ed8}
-  button.primary{background:#2563eb;color:white;border:none;padding:8px 10px;cursor:pointer}
-  button.ghost{background:transparent;border:1px solid #cbd5e1;padding:6px 8px;cursor:pointer}
-  .status{margin-left:auto;font-size:14px;color:#334155}
-  .picture-controls{width:100%;margin-top:6px;display:flex;gap:8px;align-items:center}
-  .picture-controls input{flex:1;min-width:200px;padding:6px;border:1px solid #d1d5db}
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#0f172a}
+body{margin:18px;background:#f3f4f6}
+h1{font-size:18px;margin:0 0 10px}
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tables{display:flex;gap:6px;flex-wrap:wrap}
+.table-btn{border:1px solid #cbd5e1;background:white;padding:6px 8px;cursor:pointer}
+.table-btn.on{background:#2563eb;color:white;border-color:#1d4ed8}
+button.primary{background:#2563eb;color:white;border:none;padding:8px 10px;cursor:pointer}
+button.ghost{background:transparent;border:1px solid #cbd5e1;padding:6px 8px;cursor:pointer}
+.status{margin-left:auto;font-size:14px;color:#334155}
+.picture-controls{width:100%;margin-top:6px;display:flex;gap:8px;align-items:center}
+.picture-controls input{flex:1;min-width:200px;padding:6px;border:1px solid #d1d5db}
 
-  .board-wrapper{
-    width: 600px;
-    max-width: 90vw;
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap:1px;
-    aspect-ratio: 6 / 4;
-  }
+.board-wrapper{
+  width: 600px;
+  max-width: 90vw;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap:1px;
+  aspect-ratio: 6 / 4;
+}
 
-  #board-background{
-    position:absolute;
-    top:0; left:0;
-    width:100%; height:100%;
-    background-color:#e5e7eb;
-    background-size:cover;
-    background-position:center;
-    background-repeat:no-repeat;
-    z-index:0;
-  }
+#board-background{
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  background-color:#e5e7eb;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  z-index:0;
+}
 
-  .board{
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    gap:1px;
-    width:100%;
-    height:100%;
-    position:absolute;
-    top:0; left:0;
-    z-index:1;
-  }
+.board{
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap:1px;
+  width:100%;
+  height:100%;
+  position:absolute;
+  top:0; left:0;
+  z-index:1;
+}
 
-  .tile{
-    background:white;
-    color:#0f172a;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    cursor:pointer;
-    user-select:none;
-    transition: background-color 0.15s, border-color 0.15s;
-  }
+.tile{
+  background:white;
+  color:#0f172a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  cursor:pointer;
+  user-select:none;
+  transition: background-color 0.15s, border-color 0.15s;
+}
 
-  .tile.selected{background:#dbeafe;border:2px solid #2563eb}
-  .tile.matched{opacity:0;pointer-events:none;transition:opacity .4s}
-  .tile.incorrect{background:#fecaca !important;}
+.tile.selected{background:#dbeafe;border:2px solid #2563eb}
+.tile.matched{opacity:0;pointer-events:none;transition:opacity .4s}
+.tile.incorrect{background:#fecaca !important;}
 
-  @media(max-width:839px){
-    .board-wrapper { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(6, 1fr); max-width: 90vw; aspect-ratio: 4 / 6; }
-    .board { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(6, 1fr); }
-  }
+@media(max-width:839px){
+  .board-wrapper { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(6, 1fr); max-width: 90vw; aspect-ratio: 4 / 6; }
+  .board { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(6, 1fr); }
+}
 </style>
 </head>
 <body>
-  <h1>Multiplication Matching — Picture Reveal (4×6)</h1>
+<h1>Multiplication Matching — Picture Reveal</h1>
 
-  <div class="controls">
-    <div>
-      <div class="small">Pick left tables:</div>
-      <div class="tables" id="tables-left"></div>
-    </div>
-    <div>
-      <div class="small">Pick right tables:</div>
-      <div class="tables" id="tables-right"></div>
-    </div>
-
-    <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
-      <button class="primary" id="goBtn">Start / Reset</button>
-      <button class="ghost" id="reshuffleBtn">Reshuffle</button>
-      <button class="ghost" id="generateLinkBtn">Generate Link</button>
-      <div class="status" id="status"></div>
-    </div>
+<div class="controls">
+  <div>
+    <div class="small">Pick left multiplicands:</div>
+    <div class="tables" id="tables-left"></div>
+  </div>
+  <div>
+    <div class="small">Pick right multiplicands:</div>
+    <div class="tables" id="tables-right"></div>
   </div>
 
-  <div class="picture-controls">
-    <div class="small">Hidden picture URL:</div>
-    <input id="picURL" placeholder="https://example.com/image.jpg" />
-    <button class="ghost" id="applyPicBtn">Apply Picture</button>
+  <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
+    <button class="primary" id="goBtn">Start / Reset</button>
+    <button class="ghost" id="reshuffleBtn">Reshuffle</button>
+    <button class="ghost" id="generateLinkBtn">Generate Link</button>
+    <div class="status" id="status"></div>
   </div>
+</div>
 
-  <div class="board-wrapper">
-    <div id="board-background"></div>
-    <div id="board" class="board" aria-live="polite"></div>
-  </div>
+<div class="picture-controls">
+  <div class="small">Hidden picture URL:</div>
+  <input id="picURL" placeholder="https://example.com/image.jpg" />
+  <button class="ghost" id="applyPicBtn">Apply Picture</button>
+</div>
+
+<div class="board-wrapper">
+  <div id="board-background"></div>
+  <div id="board" class="board" aria-live="polite"></div>
+</div>
 
 <script>
 (function(){
-  const urlParams = new URLSearchParams(window.location.search);
-  const isStudentView = urlParams.get('student') === '1';
+const urlParams = new URLSearchParams(window.location.search);
+const isStudentView = urlParams.get('student')==='1';
 
-  if(isStudentView){
-    document.querySelector('h1').style.display='none';
-    document.querySelector('.controls').style.display='none';
-    document.querySelector('.picture-controls').style.display='none';
-    document.querySelector('#status').style.display='none';
-    document.querySelector('.board-wrapper').style.width='600px';
-  }
+if(isStudentView){
+  document.querySelector('h1').style.display='none';
+  document.querySelector('.controls').style.display='none';
+  document.querySelector('.picture-controls').style.display='none';
+  document.querySelector('#status').style.display='none';
+  document.querySelector('.board-wrapper').style.width='600px';
+}
 
-  const tablesLeftRoot = document.getElementById('tables-left');
-  const tablesRightRoot = document.getElementById('tables-right');
-  const boardEl = document.getElementById('board');
-  const bgEl = document.getElementById('board-background');
-  const goBtn = document.getElementById('goBtn');
-  const statusEl = document.getElementById('status');
-  const reshuffleBtn = document.getElementById('reshuffleBtn');
-  const picURLInput = document.getElementById('picURL');
-  const applyPicBtn = document.getElementById('applyPicBtn');
-  const generateLinkBtn = document.getElementById('generateLinkBtn');
+const tablesLeftRoot=document.getElementById('tables-left');
+const tablesRightRoot=document.getElementById('tables-right');
+const boardEl=document.getElementById('board');
+const bgEl=document.getElementById('board-background');
+const goBtn=document.getElementById('goBtn');
+const statusEl=document.getElementById('status');
+const reshuffleBtn=document.getElementById('reshuffleBtn');
+const picURLInput=document.getElementById('picURL');
+const applyPicBtn=document.getElementById('applyPicBtn');
+const generateLinkBtn=document.getElementById('generateLinkBtn');
 
-  let selectedLeft = new Set([1,2,3,4,5,6,7,8,9,10,11,12]);
-  let selectedRight = new Set([1,2,3,4,5,6,7,8,9,10,11,12]);
-  const tilesCount = 24;
-  let tiles=[], selected=[], matches=0, attempts=0;
+let selectedLeft=new Set([1,2,3,4,5,6,7,8,9,10,11,12]);
+let selectedRight=new Set([1,2,3,4,5,6,7,8,9,10,11,12]);
+const tilesCount=24;
+let tiles=[],selected=[],matches=0,attempts=0;
 
-  function makeTableButtons(root, selectedSet){
-    for(let i=1;i<=12;i++){
-      const btn=document.createElement('button');
-      btn.className='table-btn'+(selectedSet.has(i)?' on':'');
-      btn.textContent=i;
-      btn.dataset.table=i;
-      btn.addEventListener('click',()=>{
-        if(selectedSet.has(i)) selectedSet.delete(i);
-        else selectedSet.add(i);
-        btn.classList.toggle('on');
-      });
-      root.appendChild(btn);
-    }
-  }
-
-  function updateStatus(){ if(!isStudentView) statusEl.textContent=`Matches: ${matches} | Attempts: ${attempts}`; }
-
-  function generatePairs(){
-    const choicesLeft=Array.from(selectedLeft), choicesRight=Array.from(selectedRight);
-    const possible=[];
-    for(const t of choicesLeft){ for(const m of choicesRight) possible.push({t,m,p:t*m}); }
-    for(let i=possible.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[possible[i],possible[j]]=[possible[j],possible[i]];}
-    return possible.slice(0, tilesCount/2);
-  }
-
-  function buildBoard(){
-    boardEl.innerHTML=''; tiles=[]; selected=[]; matches=0; attempts=0; updateStatus();
-    const pairs=generatePairs();
-    pairs.forEach((p,id)=>{
-      tiles.push({id,typ:'expr',text:`${p.t}×${p.m}`,val:p.p,matched:false});
-      tiles.push({id,typ:'prod',text:`${p.p}`,val:p.p,matched:false});
+function makeTableButtons(root,set){
+  root.innerHTML='';
+  for(let i=1;i<=12;i++){
+    const btn=document.createElement('button');
+    btn.className='table-btn'+(set.has(i)?' on':'');
+    btn.textContent=i;
+    btn.dataset.table=i;
+    btn.addEventListener('click',()=>{
+      if(set.has(i)) set.delete(i); else set.add(i);
+      btn.classList.toggle('on');
     });
-    for(let i=tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tiles[i],tiles[j]]=[tiles[j],tiles[i]];}
-    tiles.forEach((t,i)=>{
-      const d=document.createElement('div');
-      d.className='tile'; d.textContent=t.text;
-      d.addEventListener('click',()=>onTile(i));
-      boardEl.appendChild(d);
-      t.el=d;
-    });
+    root.appendChild(btn);
   }
+}
 
-  function onTile(i){
-    const t=tiles[i]; if(t.matched) return;
-    if(selected.includes(i)) return;
-    t.el.classList.add('selected');
-    selected.push(i);
-    if(selected.length===2){ checkMatch(); }
-  }
+function updateStatus(){ if(!isStudentView) statusEl.textContent=`Matches: ${matches} | Attempts: ${attempts}`; }
 
-  function checkMatch(){
-    attempts++;
-    const [a,b]=selected;
-    const A=tiles[a], B=tiles[b];
-    if(A.val===B.val && A.typ!==B.typ){
-      A.matched=B.matched=true;
-      setTimeout(()=>{
-        A.el.classList.add('matched'); A.el.textContent='';
-        B.el.classList.add('matched'); B.el.textContent='';
-        selected=[]; matches++; updateStatus();
-        if(matches===tilesCount/2 && !isStudentView) alert('Great job!');
-      },200);
-    } else {
-      A.el.classList.add('incorrect');
-      B.el.classList.add('incorrect');
-      setTimeout(()=>{
-        A.el.classList.remove('selected','incorrect');
-        B.el.classList.remove('selected','incorrect');
-        selected=[]; updateStatus();
-      },500);
-    }
-    updateStatus();
-  }
+function generatePairs(){
+  const choicesLeft=Array.from(selectedLeft), choicesRight=Array.from(selectedRight);
+  const possible=[];
+  for(const t of choicesLeft){ for(const m of choicesRight) possible.push({t,m,p:t*m}); }
+  for(let i=possible.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[possible[i],possible[j]]=[possible[j],possible[i]];}
+  return possible.slice(0, tilesCount/2);
+}
 
-  applyPicBtn.addEventListener('click',()=>{
-    const url=picURLInput.value.trim();
-    if(!url){bgEl.style.backgroundImage='';return;}
-    const img=new Image();
-    img.onload=()=>{bgEl.style.backgroundImage=`url('${url}')`;bgEl.style.backgroundColor='';};
-    img.onerror=()=>alert('Image failed to load.');
-    img.src=url;
+function buildBoard(){
+  boardEl.innerHTML=''; tiles=[]; selected=[]; matches=0; attempts=0; updateStatus();
+  const pairs=generatePairs();
+  pairs.forEach((p,id)=>{
+    tiles.push({id,typ:'expr',text:`${p.t}×${p.m}`,val:p.p,matched:false});
+    tiles.push({id,typ:'prod',text:`${p.p}`,val:p.p,matched:false});
   });
-
-  generateLinkBtn.addEventListener('click',()=>{
-    const left = Array.from(selectedLeft).join(',');
-    const right = Array.from(selectedRight).join(',');
-    const img = picURLInput.value.trim();
-    let url = `${window.location.origin}${window.location.pathname}?left=${left}&right=${right}`;
-    if(img) url += `&image=${encodeURIComponent(img)}`;
-    url += `&student=1`;
-    prompt('Copy this student link:', url);
+  for(let i=tiles.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[tiles[i],tiles[j]]=[tiles[j],tiles[i]];}
+  tiles.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='tile'; d.textContent=t.text;
+    d.addEventListener('click',()=>onTile(i));
+    boardEl.appendChild(d);
+    t.el=d;
   });
+}
 
-  goBtn.onclick=buildBoard;
-  reshuffleBtn.onclick=buildBoard;
+function onTile(i){
+  const t=tiles[i]; if(t.matched) return;
+  if(selected.includes(i)) return;
+  t.el.classList.add('selected');
+  selected.push(i);
+  if(selected.length===2) checkMatch();
+}
 
-  makeTableButtons(tablesLeftRoot, selectedLeft);
-  makeTableButtons(tablesRightRoot, selectedRight);
-  buildBoard();
+function checkMatch(){
+  attempts++;
+  const [a,b]=selected; const A=tiles[a], B=tiles[b];
+  if(A.val===B.val && A.typ!==B.typ){
+    A.matched=B.matched=true;
+    setTimeout(()=>{
+      A.el.classList.add('matched'); A.el.textContent='';
+      B.el.classList.add('matched'); B.el.textContent='';
+      selected=[]; matches++; updateStatus();
+      if(matches===tilesCount/2 && !isStudentView) alert('Great job!');
+    },200);
+  } else {
+    A.el.classList.add('incorrect'); B.el.classList.add('incorrect');
+    setTimeout(()=>{
+      A.el.classList.remove('selected','incorrect');
+      B.el.classList.remove('selected','incorrect');
+      selected=[]; updateStatus();
+    },500);
+  }
+  updateStatus();
+}
 
-  // Preload image if URL is in query
-  const imgParam = urlParams.get('image');
-  if(imgParam){bgEl.style.backgroundImage=`url('${imgParam}')`; bgEl.style.backgroundColor='';}
+applyPicBtn.addEventListener('click',()=>{
+  const url=picURLInput.value.trim();
+  if(!url){bgEl.style.backgroundImage='';return;}
+  const img=new Image();
+  img.onload=()=>{bgEl.style.backgroundImage=`url('${url}')`;bgEl.style.backgroundColor='';};
+  img.onerror=()=>alert('Image failed to load.');
+  img.src=url;
+});
+
+generateLinkBtn.addEventListener('click',()=>{
+  const left=Array.from(selectedLeft).join(',');
+  const right=Array.from(selectedRight).join(',');
+  const img=picURLInput.value.trim();
+  let url=`${window.location.origin}${window.location.pathname}?left=${left}&right=${right}`;
+  if(img) url+=`&image=${encodeURIComponent(img)}`;
+  url+=`&student=1`;
+  prompt('Copy this student link:',url);
+});
+
+goBtn.onclick=buildBoard;
+reshuffleBtn.onclick=buildBoard;
+
+makeTableButtons(tablesLeftRoot,selectedLeft);
+makeTableButtons(tablesRightRoot,selectedRight);
+buildBoard();
+
+const leftParam = urlParams.get('left');
+const rightParam = urlParams.get('right');
+const imgParam = urlParams.get('image');
+if(leftParam){
+  selectedLeft=new Set(leftParam.split(',').map(Number));
+  makeTableButtons(tablesLeftRoot,selectedLeft);
+}
+if(rightParam){
+  selectedRight=new Set(rightParam.split(',').map(Number));
+  makeTableButtons(tablesRightRoot,selectedRight);
+}
+if(imgParam){bgEl.style.backgroundImage=`url('${imgParam}')`; bgEl.style.backgroundColor='';}
 })();
 </script>
 </body>
 </html>
-
