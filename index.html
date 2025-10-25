@@ -136,6 +136,13 @@ let selectedRight=new Set([1,2,3,4,5,6,7,8,9,10,11,12]);
 const tilesCount=24;
 let tiles=[],selected=[],matches=0,attempts=0;
 
+// override with query params if present
+const leftParam = urlParams.get('left');
+const rightParam = urlParams.get('right');
+if(leftParam) selectedLeft=new Set(leftParam.split(',').map(Number));
+if(rightParam) selectedRight=new Set(rightParam.split(',').map(Number));
+
+// create buttons only in teacher view
 function makeTableButtons(root,set){
   root.innerHTML='';
   for(let i=1;i<=12;i++){
@@ -149,6 +156,10 @@ function makeTableButtons(root,set){
     });
     root.appendChild(btn);
   }
+}
+if(!isStudentView){
+  makeTableButtons(tablesLeftRoot,selectedLeft);
+  makeTableButtons(tablesRightRoot,selectedRight);
 }
 
 function updateStatus(){ if(!isStudentView) statusEl.textContent=`Matches: ${matches} | Attempts: ${attempts}`; }
@@ -230,22 +241,11 @@ generateLinkBtn.addEventListener('click',()=>{
 goBtn.onclick=buildBoard;
 reshuffleBtn.onclick=buildBoard;
 
-makeTableButtons(tablesLeftRoot,selectedLeft);
-makeTableButtons(tablesRightRoot,selectedRight);
-buildBoard();
-
-const leftParam = urlParams.get('left');
-const rightParam = urlParams.get('right');
+// preload image if present
 const imgParam = urlParams.get('image');
-if(leftParam){
-  selectedLeft=new Set(leftParam.split(',').map(Number));
-  makeTableButtons(tablesLeftRoot,selectedLeft);
-}
-if(rightParam){
-  selectedRight=new Set(rightParam.split(',').map(Number));
-  makeTableButtons(tablesRightRoot,selectedRight);
-}
 if(imgParam){bgEl.style.backgroundImage=`url('${imgParam}')`; bgEl.style.backgroundColor='';}
+
+buildBoard();
 })();
 </script>
 </body>
